@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CryptoSaaS - Enterprise Sentiment Analysis{% endblock %}</title>
+    
+    <!-- Tailwind CSS with Dark Mode -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome Pro -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Theme Script -->
+    <script>
+        // Theme initialization
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-inter transition-colors duration-300">
+    <div class="min-h-full flex flex-col">
+        <!-- Navigation -->
+        <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-layer-group text-blue-500 text-xl"></i>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+                            CryptoSaaS
+                        </h1>
+                    </div>
+                    
+                    <!-- Navigation Links (Center) -->
+                    <div class="hidden md:flex items-center space-x-1">
+                        <a href="/" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Market</span>
+                        </a>
+                        <a href="/dashboard/steady" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+                            <i class="fas fa-newspaper"></i>
+                            <span>News</span>
+                        </a>
+                        <a href="/dashboard/twitter" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+                            <i class="fab fa-twitter"></i>
+                            <span>Social</span>
+                        </a>
+                        <a href="/dashboard/telegram" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+                            <i class="fab fa-telegram"></i>
+                            <span>Signals</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Actions (Right) -->
+                    <div class="hidden md:flex items-center space-x-3">
+                        <!-- Theme Toggle -->
+                        <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
+                            <i id="theme-icon" class="fas fa-sun"></i>
+                        </button>
+                        
+                        <!-- Connect Wallet Button -->
+                        <button class="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                            <i class="fas fa-wallet"></i>
+                            <span class="text-sm font-medium">Connect Wallet</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden flex items-center space-x-2">
+                        <button id="mobile-theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                            <i id="mobile-theme-icon" class="fas fa-sun"></i>
+                        </button>
+                        <button id="mobile-menu-button" class="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu -->
+                <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-700">
+                    <div class="px-2 pt-2 pb-3 space-y-1">
+                        <a href="/" class="flex items-center space-x-3 px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-all duration-200">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Market</span>
+                        </a>
+                        <a href="/dashboard/steady" class="flex items-center space-x-3 px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-all duration-200">
+                            <i class="fas fa-newspaper"></i>
+                            <span>News</span>
+                        </a>
+                        <a href="/dashboard/twitter" class="flex items-center space-x-3 px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-all duration-200">
+                            <i class="fab fa-twitter"></i>
+                            <span>Social</span>
+                        </a>
+                        <a href="/dashboard/telegram" class="flex items-center space-x-3 px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-all duration-200">
+                            <i class="fab fa-telegram"></i>
+                            <span>Signals</span>
+                        </a>
+                        <div class="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                            <button class="flex items-center space-x-3 w-full px-3 py-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-all duration-200">
+                                <i class="fas fa-wallet"></i>
+                                <span>Connect Wallet</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="flex-1">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        © 2025 CryptoSaaS - Développé par CHOUFA Zouhair & Oulhadj Belaid
+                    </p>
+                    <p class="text-xs mt-1 text-gray-500 dark:text-gray-500">
+                        Projet de fin d'études - Encadrant: Mr. BENI-HSSANE
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const mobileThemeIcon = document.getElementById('mobile-theme-icon');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        function updateThemeIcon() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const iconClass = isDark ? 'fas fa-moon' : 'fas fa-sun';
+            themeIcon.className = iconClass;
+            mobileThemeIcon.className = iconClass;
+        }
+        
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+            updateThemeIcon();
+        }
+        
+        // Initialize theme icon
+        updateThemeIcon();
+        
+        // Theme toggle event listeners
+        themeToggle?.addEventListener('click', toggleTheme);
+        mobileThemeToggle?.addEventListener('click', toggleTheme);
+        
+        // Mobile menu toggle
+        mobileMenuButton?.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

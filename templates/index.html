@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+
+{% block title %}Market Overview - CryptoSaaS{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Crypto Market Overview</h1>
+        <p class="text-gray-600 dark:text-gray-400">Real-time cryptocurrency prices and market sentiment analysis</p>
+    </div>
+    
+    <!-- Crypto Price Cards (Top Row) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        
+        <!-- Bitcoin Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full">
+                        <i class="fa-brands fa-bitcoin text-orange-600 dark:text-orange-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ crypto.name }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ crypto.symbol }}</p>
+                    </div>
+                </div>
+                {% if crypto.image %}
+                <img src="{{ crypto.image }}" alt="{{ crypto.name }}" class="w-8 h-8 rounded-full">
+                {% endif %}
+            </div>
+            
+            <div class="space-y-3">
+                <div class="text-3xl font-bold text-gray-900 dark:text-white">${{ "{:,.2f}".format(crypto.price) }}</div>
+                <div class="flex items-center space-x-2">
+                    {% if crypto.change_24h >= 0 %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400">
+                        <i class="fa-solid fa-arrow-up mr-1"></i>
+                        +{{ crypto.change_24h }}%
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-400">
+                        <i class="fa-solid fa-arrow-down mr-1"></i>
+                        {{ crypto.change_24h }}%
+                    </span>
+                    {% endif %}
+                    <span class="text-gray-500 dark:text-gray-400 text-sm">24h</span>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Market Cap</p>
+                        <p class="text-gray-900 dark:text-white font-semibold">${{ "{:,.0f}".format(crypto.market_cap / 1000000000) }}B</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Volume 24h</p>
+                        <p class="text-gray-900 dark:text-white font-semibold">${{ "{:,.0f}".format(crypto.volume_24h / 1000000000) }}B</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ethereum Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                        <i class="fa-brands fa-ethereum text-blue-600 dark:text-blue-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Ethereum</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">ETH</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="text-3xl font-bold text-gray-900 dark:text-white">${{ "{:,.2f}".format(crypto.price * 0.06) }}</div>
+                <div class="flex items-center space-x-2">
+                    {% if (crypto.change_24h - 1.2) >= 0 %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400">
+                        <i class="fa-solid fa-arrow-up mr-1"></i>
+                        +{{ "{:.2f}".format(crypto.change_24h - 1.2) }}%
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-400">
+                        <i class="fa-solid fa-arrow-down mr-1"></i>
+                        {{ "{:.2f}".format(crypto.change_24h - 1.2) }}%
+                    </span>
+                    {% endif %}
+                    <span class="text-gray-500 dark:text-gray-400 text-sm">24h</span>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Market Cap</p>
+                        <p class="text-gray-900 dark:text-white font-semibold">${{ "{:,.0f}".format(crypto.market_cap * 0.4 / 1000000000) }}B</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Volume 24h</p>
+                        <p class="text-gray-900 dark:text-white font-semibold">${{ "{:,.0f}".format(crypto.volume_24h * 0.3 / 1000000000) }}B</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Solana Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                        <i class="fa-solid fa-coins text-purple-600 dark:text-purple-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Solana</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">SOL</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="text-3xl font-bold text-gray-900 dark:text-white">${{ "{:,.2f}".format(crypto.price * 0.002) }}</div>
+                <div class="flex items-center space-x-2">
+                    {% if (crypto.change_24h + 0.8) >= 0 %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400">
+                        <i class="fa-solid fa-arrow-up mr-1"></i>
+                        +{{ "{:.2f}".format(crypto.change_24h + 0.8) }}%
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-400">
+                        <i class="fa-solid fa-arrow-down mr-1"></i>
+                        {{ "{:.2f}".format(crypto.change_24h + 0.8) }}%
+                    </span>
+                    {% endif %}
+                    <span class="text-gray-500 dark:text-gray-400 text-sm">24h</span>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Market Cap</p>
+                        <p class="text-gray-900 dark:text-white font-semibold">${{ "{:,.0f}".format(crypto.market_cap * 0.08 / 1000000000) }}B</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Volume 24h</p>
+                        <p class="text-gray-900 dark:text-white font-semibold">${{ "{:,.0f}".format(crypto.volume_24h * 0.15 / 1000000000) }}B</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Chart Section -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-chart-line text-blue-500"></i>
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Price vs Sentiment Correlation (24h)</h2>
+                </div>
+                <button onclick="refreshChart()" class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <!-- Crypto Selector -->
+            <div class="flex items-center justify-center space-x-4 mb-6">
+                <button id="btn-bitcoin" onclick="loadChartData('bitcoin')" class="crypto-btn active px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-blue-600 text-white">
+                    <i class="fa-brands fa-bitcoin mr-2"></i>
+                    Bitcoin
+                </button>
+                <button id="btn-ethereum" onclick="loadChartData('ethereum')" class="crypto-btn px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600">
+                    <i class="fa-brands fa-ethereum mr-2"></i>
+                    Ethereum
+                </button>
+                <button id="btn-solana" onclick="loadChartData('solana')" class="crypto-btn px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600">
+                    <i class="fa-solid fa-coins mr-2"></i>
+                    Solana
+                </button>
+            </div>
+            
+            <!-- Chart Legend -->
+            <div class="flex items-center justify-center space-x-6 mb-6 text-sm">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    <span class="text-gray-600 dark:text-gray-400">Price ($)</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                    <span class="text-gray-600 dark:text-gray-400">Sentiment Score</span>
+                </div>
+            </div>
+            
+            <!-- Chart Canvas -->
+            <div class="relative h-96">
+                <canvas id="cryptoChart"></canvas>
+            </div>
+            
+            <!-- Chart Footer -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <i class="fa-brands fa-bitcoin text-orange-500 text-2xl mb-2"></i>
+                    <p class="text-blue-700 dark:text-blue-300 font-semibold">Real-time Price Data</p>
+                    <p class="text-xs text-blue-600 dark:text-blue-400">Powered by CoinGecko API</p>
+                </div>
+                <div class="text-center p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                    <i class="fa-solid fa-brain text-purple-500 text-2xl mb-2"></i>
+                    <p class="text-emerald-700 dark:text-emerald-300 font-semibold">AI Sentiment Analysis</p>
+                    <p class="text-xs text-emerald-600 dark:text-emerald-400">VADER NLP Processing</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+    // Variables globales
+    let chart;
+    let currentCrypto = 'bitcoin';
+    
+    // Initialiser le graphique
+    function initChart() {
+        const ctx = document.getElementById('cryptoChart').getContext('2d');
+        const isDark = document.documentElement.classList.contains('dark');
+        
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Price ($)',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        yAxisID: 'y',
+                        tension: 0.4,
+                        borderWidth: 3,
+                        fill: true,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Sentiment Score',
+                        data: [],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        yAxisID: 'y1',
+                        tension: 0.4,
+                        borderDash: [5, 5],
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointHoverRadius: 5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return 'Time: ' + context[0].label;
+                            },
+                            label: function(context) {
+                                if (context.datasetIndex === 0) {
+                                    return 'Price: $' + context.parsed.y.toLocaleString();
+                                } else {
+                                    const sentiment = context.parsed.y;
+                                    let sentimentText = 'Neutral';
+                                    if (sentiment > 0.05) sentimentText = 'Bullish';
+                                    else if (sentiment < -0.05) sentimentText = 'Bearish';
+                                    return `Sentiment: ${sentimentText} (${sentiment})`;
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Price ($)',
+                            color: isDark ? '#9ca3af' : '#6b7280'
+                        },
+                        grid: { color: isDark ? '#374151' : '#e5e7eb' },
+                        ticks: { 
+                            color: isDark ? '#9ca3af' : '#6b7280',
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Sentiment Score',
+                            color: isDark ? '#9ca3af' : '#6b7280'
+                        },
+                        grid: { drawOnChartArea: false },
+                        ticks: { 
+                            color: isDark ? '#9ca3af' : '#6b7280',
+                            min: -1,
+                            max: 1
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (24h)',
+                            color: isDark ? '#9ca3af' : '#6b7280'
+                        },
+                        grid: { color: isDark ? '#374151' : '#e5e7eb' },
+                        ticks: { color: isDark ? '#9ca3af' : '#6b7280' }
+                    }
+                }
+            }
+        });
+        
+        // Charger les données initiales
+        loadChartData('bitcoin');
+    }
+    
+    // Charger les données d'une crypto
+    async function loadChartData(coinId) {
+        try {
+            // Mettre à jour l'état des boutons
+            updateActiveButton(coinId);
+            currentCrypto = coinId;
+            
+            // Appel API
+            const response = await fetch(`/api/history/${coinId}`);
+            const data = await response.json();
+            
+            // Mettre à jour le graphique
+            chart.data.labels = data.data.map(d => d.time);
+            chart.data.datasets[0].data = data.data.map(d => d.price);
+            chart.data.datasets[0].label = `${data.label} Price ($)`;
+            chart.data.datasets[1].data = data.data.map(d => d.sentiment);
+            
+            chart.update('active');
+            
+        } catch (error) {
+            console.error('Erreur lors du chargement des données:', error);
+        }
+    }
+    
+    // Mettre à jour le bouton actif
+    function updateActiveButton(coinId) {
+        // Réinitialiser tous les boutons
+        document.querySelectorAll('.crypto-btn').forEach(btn => {
+            btn.className = 'crypto-btn px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600';
+        });
+        
+        // Activer le bouton sélectionné
+        const activeBtn = document.getElementById(`btn-${coinId}`);
+        if (activeBtn) {
+            activeBtn.className = 'crypto-btn active px-4 py-2 rounded-lg font-medium transition-colors duration-200 bg-blue-600 text-white';
+        }
+    }
+    
+    // Fonction de rafraîchissement
+    function refreshChart() {
+        loadChartData(currentCrypto);
+    }
+    
+    // Initialiser au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+        initChart();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}Trading Signals - CryptoSaaS{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center space-x-3 mb-2">
+            <i class="fa-brands fa-telegram text-cyan-500 text-2xl"></i>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Trading Signals</h1>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400">Real-time trading signals from Telegram channels</p>
+    </div>
+    
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Buy Signals -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 transition-colors duration-300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Signaux d'Achat</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ telegram.stats.buy_signals }}</p>
+                </div>
+                <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+                    <i class="fa-solid fa-arrow-trend-up text-emerald-600 dark:text-emerald-400"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sell Signals -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 transition-colors duration-300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Signaux de Vente</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ telegram.stats.sell_signals }}</p>
+                </div>
+                <div class="p-3 bg-rose-100 dark:bg-rose-900/30 rounded-full">
+                    <i class="fa-solid fa-arrow-trend-down text-rose-600 dark:text-rose-400"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Average Confidence -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 transition-colors duration-300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Confiance Moyenne</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ telegram.avg_confidence }}%</p>
+                </div>
+                <div class="p-3 bg-cyan-100 dark:bg-cyan-900/30 rounded-full">
+                    <i class="fa-solid fa-shield-halved text-cyan-600 dark:text-cyan-400"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Active Channels -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 transition-colors duration-300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Canaux Actifs</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ telegram.channels|length }}</p>
+                </div>
+                <div class="p-3 bg-teal-100 dark:bg-teal-900/30 rounded-full">
+                    <i class="fa-solid fa-robot text-teal-600 dark:text-teal-400"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- API Status -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 mb-8 transition-colors duration-300">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fa-brands fa-telegram text-cyan-500 text-xl"></i>
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Configuration Telegram</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Statut de connexion aux canaux</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                {% if telegram.telegram_config.is_configured %}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400">
+                    <i class="fa-solid fa-check-circle mr-1"></i>
+                    Connecté
+                </span>
+                {% else %}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400">
+                    <i class="fa-solid fa-robot mr-1"></i>
+                    Mode Simulation
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Signals Feed -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors duration-300">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-signal text-cyan-500"></i>
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Signaux de Trading</h2>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                        {{ telegram.stats.total }} signaux
+                    </span>
+                </div>
+                <button onclick="window.location.reload()" class="bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>Actualiser</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for signal in telegram.signals %}
+                <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                    <!-- Signal Header -->
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-brands fa-telegram text-cyan-500"></i>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ signal.channel }}</span>
+                            <span class="text-gray-400 text-sm">{{ signal.time_ago }}</span>
+                        </div>
+                        {% if signal.signal_type == 'ACHAT' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>
+                            BUY
+                        </span>
+                        {% elif signal.signal_type == 'VENTE' %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-400">
+                            <i class="fa-solid fa-arrow-down mr-1"></i>
+                            SELL
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                            <i class="fa-solid fa-info-circle mr-1"></i>
+                            INFO
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Signal Message -->
+                    <p class="text-gray-900 dark:text-white mb-3 leading-relaxed">{{ signal.text }}</p>
+                    
+                    <!-- Signal Footer -->
+                    <div class="flex items-center justify-between text-sm">
+                        <div class="flex items-center space-x-4">
+                            {% if signal.entry_price > 0 %}
+                            <span class="flex items-center text-gray-600 dark:text-gray-400">
+                                <i class="fa-solid fa-dollar-sign mr-1 text-cyan-500"></i>
+                                <span class="font-mono">${{ signal.entry_price }}</span>
+                            </span>
+                            {% endif %}
+                            <span class="flex items-center text-cyan-600 dark:text-cyan-400">
+                                <i class="fa-solid fa-shield-halved mr-1"></i>
+                                <span class="font-medium">{{ signal.confidence_score }}% confiance</span>
+                            </span>
+                        </div>
+                        <span class="text-gray-500 dark:text-gray-400">
+                            VADER: {{ signal.sentiment_score }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Load More -->
+            <div class="text-center mt-6">
+                <button class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg transition-colors duration-200 flex items-center space-x-2 mx-auto">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Charger plus de signaux</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

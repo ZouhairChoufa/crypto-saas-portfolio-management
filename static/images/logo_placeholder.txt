@@ -1,0 +1,4 @@
+# Logo Placeholder
+# Place your logo.png file here
+# Recommended size: 200x200px or 300x300px
+# Format: PNG with transparent background

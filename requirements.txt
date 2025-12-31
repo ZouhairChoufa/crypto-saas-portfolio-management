@@ -1,0 +1,28 @@
+# Framework Web
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# Requêtes HTTP
+requests==2.32.5
+
+# Analyse de Sentiment (NLP)
+vaderSentiment==3.3.2
+
+# Manipulation de dates
+python-dateutil==2.8.2
+
+# Variables d'environnement (pour production)
+python-dotenv==1.0.0
+
+# Base de données (optionnel pour historique)
+SQLAlchemy==2.0.23
+Flask-SQLAlchemy==3.1.1
+
+# Gestion JSON améliorée
+simplejson==3.19.2
+
+# CORS (si API externe)
+Flask-CORS==4.0.0
+
+# Cache (performance)
+Flask-Caching==2.1.0

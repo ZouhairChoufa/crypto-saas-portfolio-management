@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}News Sentiment - CryptoSaaS{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center space-x-3 mb-2">
+            <i class="fa-solid fa-newspaper text-amber-500 text-2xl"></i>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Financial News Sentiment</h1>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400">AI-powered analysis of cryptocurrency market news</p>
+    </div>
+    
+    <!-- Global News Sentiment Card -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 mb-8 transition-colors duration-300">
+        <div class="text-center mb-6">
+            <div class="flex items-center justify-center space-x-3 mb-4">
+                <i class="fa-solid fa-chart-line text-amber-500 text-2xl"></i>
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Global News Sentiment</h2>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <!-- Sentiment Indicator -->
+            <div class="text-center">
+                <div class="mb-6">
+                    <div class="text-6xl font-bold text-amber-500 mb-2">
+                        {{ news.overall_sentiment.label }}
+                    </div>
+                    <div class="text-lg text-gray-600 dark:text-gray-400 mb-2">
+                        Market Sentiment
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-500">
+                        Average Score: {{ news.average_score }}
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400">{{ news.overall_sentiment.description }}</p>
+            </div>
+            
+            <!-- Statistics Grid -->
+            <div class="space-y-4">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                        <i class="fa-solid fa-arrow-trend-up text-emerald-600 dark:text-emerald-400 text-2xl mb-2"></i>
+                        <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ news.stats.positive }}</div>
+                        <div class="text-xs text-emerald-600 dark:text-emerald-400">Positive</div>
+                    </div>
+                    
+                    <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <i class="fa-solid fa-minus text-gray-600 dark:text-gray-400 text-2xl mb-2"></i>
+                        <div class="text-2xl font-bold text-gray-600 dark:text-gray-400">{{ news.stats.neutral }}</div>
+                        <div class="text-xs text-gray-600 dark:text-gray-400">Neutral</div>
+                    </div>
+                    
+                    <div class="text-center p-4 bg-rose-50 dark:bg-rose-900/20 rounded-lg border border-rose-200 dark:border-rose-800">
+                        <i class="fa-solid fa-arrow-trend-down text-rose-600 dark:text-rose-400 text-2xl mb-2"></i>
+                        <div class="text-2xl font-bold text-rose-600 dark:text-rose-400">{{ news.stats.negative }}</div>
+                        <div class="text-xs text-rose-600 dark:text-rose-400">Negative</div>
+                    </div>
+                </div>
+                
+                <!-- API Status -->
+                <div class="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-key text-amber-600 dark:text-amber-400"></i>
+                            <span class="text-amber-700 dark:text-amber-300 font-medium">Steady API Status</span>
+                        </div>
+                        {% if news.api_key_used %}
+                        <span class="flex items-center text-emerald-600 dark:text-emerald-400 text-sm">
+                            <i class="fa-solid fa-check-circle mr-1"></i>
+                            Connected
+                        </span>
+                        {% else %}
+                        <span class="flex items-center text-rose-600 dark:text-rose-400 text-sm">
+                            <i class="fa-solid fa-times-circle mr-1"></i>
+                            Simulation Mode
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- News Articles Feed -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors duration-300">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-rss text-amber-500"></i>
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Latest Financial News</h2>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                        {{ news.stats.total }} articles
+                    </span>
+                </div>
+                <button onclick="window.location.reload()" class="bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>Actualiser</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for article in news.articles %}
+                <div class="border-l-4 {% if article.classification == 'POSITIF' %}border-emerald-500{% elif article.classification == 'NEGATIF' %}border-rose-500{% else %}border-gray-400{% endif %} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-r-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                    <div class="flex items-start justify-between">
+                        <!-- Article Content -->
+                        <div class="flex-1 pr-4">
+                            <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                <i class="fa-solid fa-building text-amber-500"></i>
+                                <span class="font-medium text-amber-600 dark:text-amber-400">{{ article.source }}</span>
+                                <span>•</span>
+                                <span>{{ article.published_at }}</span>
+                            </div>
+                            
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 leading-tight">
+                                {{ article.title }}
+                            </h3>
+                            
+                            <div class="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
+                                <span class="flex items-center">
+                                    <i class="fa-solid fa-brain mr-1"></i>
+                                    VADER: {{ article.sentiment_score }}
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fa-solid fa-robot mr-1"></i>
+                                    AI Analyzed
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Sentiment Badge -->
+                        <div class="flex-shrink-0">
+                            {% if article.classification == 'POSITIF' %}
+                            <span class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                                <i class="fa-solid fa-arrow-up mr-1"></i>
+                                Positif
+                            </span>
+                            {% elif article.classification == 'NEGATIF' %}
+                            <span class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
+                                <i class="fa-solid fa-arrow-down mr-1"></i>
+                                Négatif
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
+                                <i class="fa-solid fa-minus mr-1"></i>
+                                Neutre
+                            </span>
+                            {% endif %}
+                            <div class="text-center mt-1">
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ article.sentiment_score }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Load More -->
+            <div class="text-center mt-6">
+                <button class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg transition-colors duration-200 flex items-center space-x-2 mx-auto">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Charger plus d'articles</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

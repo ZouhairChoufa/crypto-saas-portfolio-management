@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+
+{% block title %}Social Sentiment - CryptoSaaS{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center space-x-3 mb-2">
+            <i class="fa-brands fa-twitter text-blue-500 text-2xl"></i>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Social Media Sentiment</h1>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400">Real-time cryptocurrency sentiment from Twitter/X</p>
+    </div>
+    
+    <!-- Main Layout: 1/3 - 2/3 Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column (1/3) - Hype Meter -->
+        <div class="lg:col-span-1">
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 transition-colors duration-300 sticky top-24">
+                
+                <!-- Hype Meter Header -->
+                <div class="text-center mb-6">
+                    <div class="flex items-center justify-center space-x-2 mb-2">
+                        <i class="fa-brands fa-twitter text-blue-500 text-xl"></i>
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Social Hype Score</h2>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Live sentiment analysis</p>
+                </div>
+                
+                <!-- Hype Score Circle -->
+                <div class="relative mb-6">
+                    <div class="w-40 h-40 mx-auto relative">
+                        <!-- SVG Circle Progress -->
+                        <svg class="w-40 h-40 transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="8" fill="transparent" class="text-gray-200 dark:text-gray-700"/>
+                            <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="8" fill="transparent" 
+                                    stroke-dasharray="{{ (twitter.hype_meter * 251.2) / 100 }} 251.2" 
+                                    class="text-blue-500 transition-all duration-1000"/>
+                        </svg>
+                        
+                        <!-- Center Content -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-4xl font-bold text-blue-500 mb-1">
+                                    {{ twitter.hype_meter }}
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                                    Hype Score
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hype Level -->
+                    <div class="text-center mt-4">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                            {{ twitter.hype_level.label }}
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            Based on {{ twitter.stats.total }} tweets
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <div class="text-center p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                        <div class="text-lg font-bold text-emerald-600 dark:text-emerald-400">{{ twitter.stats.positive }}</div>
+                        <div class="text-xs text-emerald-600 dark:text-emerald-400">Bullish</div>
+                    </div>
+                    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <div class="text-lg font-bold text-gray-600 dark:text-gray-400">{{ twitter.stats.neutral }}</div>
+                        <div class="text-xs text-gray-600 dark:text-gray-400">Neutral</div>
+                    </div>
+                    <div class="text-center p-3 bg-rose-50 dark:bg-rose-900/20 rounded-lg border border-rose-200 dark:border-rose-800">
+                        <div class="text-lg font-bold text-rose-600 dark:text-rose-400">{{ twitter.stats.negative }}</div>
+                        <div class="text-xs text-rose-600 dark:text-rose-400">Bearish</div>
+                    </div>
+                </div>
+                
+                <!-- API Status -->
+                <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mb-4">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-blue-700 dark:text-blue-300">Twitter API</span>
+                        {% if twitter.api_success %}
+                        <span class="flex items-center text-emerald-600 dark:text-emerald-400">
+                            <i class="fa-solid fa-check-circle mr-1"></i>
+                            Live
+                        </span>
+                        {% else %}
+                        <span class="flex items-center text-amber-600 dark:text-amber-400">
+                            <i class="fa-solid fa-robot mr-1"></i>
+                            Demo
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Refresh Button -->
+                <button onclick="window.location.reload()" class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>Actualiser</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Right Column (2/3) - Live Feed -->
+        <div class="lg:col-span-2">
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors duration-300">
+                
+                <!-- Feed Header -->
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-rss text-blue-500"></i>
+                            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Live Crypto Feed</h2>
+                            {% if twitter.is_simulation %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400">
+                                <i class="fa-solid fa-flask mr-1"></i>
+                                Simulation
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tweets Feed -->
+                <div class="p-6">
+                    <div class="space-y-4 max-h-96 overflow-y-auto">
+                        {% for tweet in twitter.tweets %}
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                            
+                            <!-- Tweet Header -->
+                            <div class="flex items-start space-x-3 mb-3">
+                                <!-- Avatar -->
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                        {% if tweet.is_mock %}
+                                        <i class="fa-solid fa-robot text-white text-sm"></i>
+                                        {% else %}
+                                        <i class="fa-brands fa-twitter text-white text-sm"></i>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- User Info -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-medium text-gray-900 dark:text-white">@{{ tweet.author_id }}</span>
+                                        <span class="text-gray-400 text-sm">•</span>
+                                        <span class="text-gray-500 dark:text-gray-400 text-sm">{{ tweet.time_ago }}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Sentiment Badge -->
+                                <div class="flex-shrink-0">
+                                    {% if tweet.classification == 'POSITIF' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400">
+                                        {{ tweet.classification }}
+                                    </span>
+                                    {% elif tweet.classification == 'NEGATIF' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-400">
+                                        {{ tweet.classification }}
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                                        {{ tweet.classification }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Tweet Content -->
+                            <div class="mb-4">
+                                <p class="text-gray-900 dark:text-white leading-relaxed">{{ tweet.text }}</p>
+                            </div>
+                            
+                            <!-- VADER Score Progress Bar -->
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2">
+                                    <span>VADER Sentiment Score</span>
+                                    <span>{{ tweet.sentiment_score }}</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                    {% set score_percentage = ((tweet.sentiment_score + 1) * 50) | round | int %}
+                                    {% if score_percentage > 60 %}
+                                    <div class="bg-emerald-500 h-2 rounded-full transition-all duration-1000" style="width: {{ score_percentage }}%"></div>
+                                    {% elif score_percentage < 40 %}
+                                    <div class="bg-rose-500 h-2 rounded-full transition-all duration-1000" style="width: {{ score_percentage }}%"></div>
+                                    {% else %}
+                                    <div class="bg-gray-400 h-2 rounded-full transition-all duration-1000" style="width: {{ score_percentage }}%"></div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Tweet Actions -->
+                            <div class="flex items-center justify-between text-gray-500 dark:text-gray-400 text-sm">
+                                <div class="flex items-center space-x-6">
+                                    <span class="flex items-center hover:text-blue-500 cursor-pointer transition-colors duration-200">
+                                        <i class="fa-regular fa-comment mr-1"></i>
+                                        {{ (tweet.sentiment_score * 100) | round | int }}
+                                    </span>
+                                    <span class="flex items-center hover:text-emerald-500 cursor-pointer transition-colors duration-200">
+                                        <i class="fa-solid fa-retweet mr-1"></i>
+                                        {{ ((tweet.sentiment_score + 1) * 50) | round | int }}
+                                    </span>
+                                    <span class="flex items-center hover:text-rose-500 cursor-pointer transition-colors duration-200">
+                                        <i class="fa-regular fa-heart mr-1"></i>
+                                        {{ ((tweet.sentiment_score + 1) * 75) | round | int }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center text-xs">
+                                    <i class="fa-solid fa-brain mr-1 text-blue-500"></i>
+                                    <span>AI Analyzed</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Load More -->
+                    <div class="text-center mt-6">
+                        <button class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg transition-colors duration-200 flex items-center space-x-2 mx-auto">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Charger plus de tweets</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}
