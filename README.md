@@ -239,7 +239,7 @@ git add .
 git commit -m "Initial commit: CryptoSaaS v1.0"
 
 # Ajouter remote GitHub
-git remote add origin https://github.com/votre-username/crypto-saas.git
+git remote add origin https://github.com/votre-username/crypto-saas-portfolio-management.git
 git branch -M main
 git push -u origin main
 ```
@@ -253,7 +253,7 @@ git push -u origin main
 Créer `.github/workflows/tests.yml` pour CI/CD automatique
 
 ### 4. Documentation
-- README.md complet ✅
+- README.md complet 
 - Screenshots dans `/docs/screenshots/`
 - Documentation API avec Swagger (futur)
 
@@ -325,9 +325,9 @@ Utilisation commerciale interdite sans autorisation.
 - **Mr. BENI-HSSANE** - Superviseur de projet
 
 ### Contact
-- Email : [contact@cryptosaas.dev]
-- GitHub : [github.com/votre-username/crypto-saas]
-- Demo : [cryptosaas-demo.herokuapp.com]
+- Email : [zouhair.choufa3@gmail.com]
+- GitHub : [[github.com/ZouhairChoufa/crypto-saas-portfolio-management](https://github.com/ZouhairChoufa/crypto-saas-portfolio-management)]
+- Demo : [cryptosaas-portfolio-management-demo.herokuapp.com]
 
 ---
 
@@ -354,4 +354,4 @@ Utilisation commerciale interdite sans autorisation.
 ---
 
 **Développé pour l'analyse de sentiment crypto**  
-*Projet de fin d'études 2024-2025*
+*Projet de fin De module SA & TM 2024-2025*
